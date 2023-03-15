@@ -10,73 +10,54 @@ import java.util.Arrays;
 public class ArrayStorage {
     private Resume[] storage = new Resume[10000];
     private int size = 0;
-    private boolean check = false; //переменная для проверки на наличие элемента
 
     //очистка массива
     public void clear() {
-        for (int i = 0; i < size; i++) {
-            storage[i] = null;
-        }
+        Arrays.fill(storage, null);
         size = 0;
     }
 
     //обновление элемента
-    public void update(Resume oldResume, Resume newResume) {
-        for (int i = 0; i < size; i++) {
-            if (storage[i] == oldResume) {
-                check = true;
-                storage[i] = newResume;
-            }
-        }
-        if (!check) {
+    public void update(Resume r) {
+        int index = getIndex(r.getUuid());
+        if (index == -1) {
             System.out.println("Ошибка обновления: данного элемента не существует");
+        } else {
+            storage[index] = r;
         }
     }
 
     //добавление элемента
     public void save(Resume r) {
-        if (size < storage.length) {
-            for (int i = 0; i < size; i++) {
-                if (storage[i] == r) {
-                    check = true;
-                }
-            }
-            if (check) {
-                System.out.println("Ошибка сохранения: данный элемент уже существует");
-            } else {
-                storage[size] = r;
-                size++;
-            }
-        } else {
+        if (getIndex(r.getUuid()) != -1) {
+            System.out.println("Ошибка сохранения: данный элемент уже существует");
+        } else if (size == storage.length) {
             System.out.println("Ошибка сохранения: массив переполнен");
+        } else {
+            storage[size] = r;
+            size++;
         }
     }
 
     //получение элемента
     public Resume get(String uuid) {
-        for (int i = 0; i < size; i++) {
-            if (uuid.equals(storage[i].getUuid())) {
-                check = true;
-                return storage[i];
-            }
-        }
-        if (!check) {
+        int index = getIndex(uuid);
+        if (index != -1) {
+            return storage[index];
+        } else {
             System.out.println("Ошибка получения: данного элемента не существует");
+            return null;
         }
-        return null;
     }
 
     //удаление элемента
     public void delete(String uuid) {
-        for (int i = 0; i < size; i++) {
-            if (uuid.equals(storage[i].getUuid())) {
-                check = true;
-                storage[i] = storage[size - 1];
-                storage[size - 1] = null;
-                size--;
-            }
-        }
-        if (!check) {
+        int index = getIndex(uuid);
+        if (index != -1) {
+            storage[index] = storage[size - 1];
+            storage[size - 1] = null;
+            size--;
+        } else {
             System.out.println("Ошибка удаления: данного элемента не существует");
         }
     }
@@ -86,12 +67,20 @@ public class ArrayStorage {
      */
     //получение всего массива
     public Resume[] getAll() {
-        Resume[] resume = Arrays.copyOf(storage, size);
-        return resume;
+        return Arrays.copyOf(storage, size);
     }
 
     //получение текущего размера
     public int size() {
         return size;
+    }
+
+    private int getIndex(String uuid) {
+        for (int i = 0; i < size; i++) {
+            if (uuid.equals(storage[i].getUuid())) {
+                return i;
+            }
+        }
+        return -1;
     }
 }
