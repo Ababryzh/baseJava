@@ -1,5 +1,8 @@
 package com.urise.webapp.storage;
 
+import com.urise.webapp.exception.ExistStorageException;
+import com.urise.webapp.exception.NotExistStorageException;
+import com.urise.webapp.exception.StorageException;
 import com.urise.webapp.model.Resume;
 
 import java.util.Arrays;
@@ -22,7 +25,7 @@ public abstract class AbstractArrayStorage implements Storage {
     public void update(Resume r) {
         int index = getIndex(r.getUuid());
         if (index < 0) {
-            System.out.println("Ошибка обновления: данного элемента не существует");
+            throw new NotExistStorageException(r.getUuid());
         } else {
             storage[index] = r;
         }
@@ -31,9 +34,9 @@ public abstract class AbstractArrayStorage implements Storage {
     //добавление элемента
     public void save(Resume r) {
         if (getIndex(r.getUuid()) > -1) {
-            System.out.println("Ошибка сохранения: данный элемент уже существует");
+            throw new ExistStorageException(r.getUuid());
         } else if (size == STORAGE_LIMIT) {
-            System.out.println("Ошибка сохранения: массив переполнен");
+            throw new StorageException("Storage overflow", r.getUuid());
         } else {
             insertElement(r, getIndex(r.getUuid()));
             size++;
@@ -46,8 +49,7 @@ public abstract class AbstractArrayStorage implements Storage {
         if (index > -1) {
             return storage[index];
         } else {
-            System.out.println("Ошибка получения: данного элемента не существует");
-            return null;
+            throw new NotExistStorageException(uuid);
         }
     }
 
@@ -59,7 +61,7 @@ public abstract class AbstractArrayStorage implements Storage {
             storage[size - 1] = null;
             size--;
         } else {
-            System.out.println("Ошибка удаления: данного элемента не существует");
+            throw new NotExistStorageException(uuid);
         }
     }
 
