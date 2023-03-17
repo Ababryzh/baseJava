@@ -7,7 +7,7 @@ import com.urise.webapp.model.Resume;
  */
 public interface Storage {
     //очистка массива
-    void clear();
+    void clearStorage();
 
     //обновление элемента
     void update(Resume r);
@@ -25,5 +25,5 @@ public interface Storage {
     Resume[] getAll();
 
     //получение текущего размера
-    int size();
+    int getSize();
 }

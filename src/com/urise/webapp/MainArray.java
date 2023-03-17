@@ -33,7 +33,7 @@ public class MainArray {
                     printAll();
                     break;
                 case "size":
-                    System.out.println(ARRAY_STORAGE.size());
+                    System.out.println(ARRAY_STORAGE.getSize());
                     break;
                 case "save":
                     r = new Resume(uuid);
@@ -48,7 +48,7 @@ public class MainArray {
                     System.out.println(ARRAY_STORAGE.get(uuid));
                     break;
                 case "clear":
-                    ARRAY_STORAGE.clear();
+                    ARRAY_STORAGE.clearStorage();
                     printAll();
                     break;
                 case "exit":

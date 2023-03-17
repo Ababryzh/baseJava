@@ -10,18 +10,18 @@ import java.util.Arrays;
 /**
  * Array based storage for Resumes
  */
-public abstract class AbstractArrayStorage implements Storage {
+public abstract class AbstractArrayStorage extends AbstractStorage {
     protected static final int STORAGE_LIMIT = 10000;
     public Resume[] storage = new Resume[STORAGE_LIMIT];
     protected int size = 0;
 
-    //очистка массива
-    public void clear() {
+    @Override
+    public void clearStorage() {
         Arrays.fill(storage, 0, size, null);
         size = 0;
     }
 
-    //обновление элемента
+    @Override
     public void update(Resume r) {
         int index = getIndex(r.getUuid());
         if (index < 0) {
@@ -31,7 +31,7 @@ public abstract class AbstractArrayStorage implements Storage {
         }
     }
 
-    //добавление элемента
+    @Override
     public void save(Resume r) {
         if (getIndex(r.getUuid()) > -1) {
             throw new ExistStorageException(r.getUuid());
@@ -43,7 +43,7 @@ public abstract class AbstractArrayStorage implements Storage {
         }
     }
 
-    //получение элемента
+    @Override
     public Resume get(String uuid) {
         int index = getIndex(uuid);
         if (index > -1) {
@@ -53,7 +53,7 @@ public abstract class AbstractArrayStorage implements Storage {
         }
     }
 
-    //удаление элемента
+    @Override
     public void delete(String uuid) {
         int index = getIndex(uuid);
         if (index > -1) {
@@ -65,13 +65,13 @@ public abstract class AbstractArrayStorage implements Storage {
         }
     }
 
-    //получение всего массива
+    @Override
     public Resume[] getAll() {
         return Arrays.copyOfRange(storage, 0, size);
     }
 
-    //получение текущего размера
-    public int size() {
+    @Override
+    public int getSize() {
         return size;
     }
 
