@@ -1,29 +1,23 @@
 package com.urise.webapp.storage;
 
 import com.urise.webapp.model.Resume;
-
+import java.util.List;
 /**
  * Array based storage for Resumes
  */
 public interface Storage {
-    //очистка массива
-    void clearStorage();
 
-    //обновление элемента
+    void clear();
+
     void update(Resume r);
 
-    //добавление элемента
     void save(Resume r);
 
-    //получение элемента
     Resume get(String uuid);
 
-    //удаление элемента
     void delete(String uuid);
 
-    //получение всего массива
-    Resume[] getAll();
+    List<Resume> getAllSorted();
 
-    //получение текущего размера
-    int getSize();
+    int size();
 }

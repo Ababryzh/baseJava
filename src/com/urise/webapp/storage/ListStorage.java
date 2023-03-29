@@ -1,65 +1,64 @@
 package com.urise.webapp.storage;
 
-import com.urise.webapp.exception.ExistStorageException;
-import com.urise.webapp.exception.NotExistStorageException;
 import com.urise.webapp.model.Resume;
 
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
 
 public class ListStorage extends AbstractStorage{
-    Collection<Resume> storage = new ArrayList<>();
+    //Collection<Resume> storage = new ArrayList<>();
+    private List<Resume> list = new ArrayList<>();
 
-    public void clearStorage() {
-        storage.clear();
-    }
-
-    public void update(Resume r) {
-        Resume resume = existCheck(r.getUuid());
-        if (resume == null) {
-            throw new NotExistStorageException(r.getUuid());
-        }
-    }
-
-    public void save(Resume r) {
-        if (existCheck(r.getUuid()) != null) {
-            throw new ExistStorageException(r.getUuid());
-        }
-        storage.add(r);
-    }
-
-    public Resume get(String uuid) {
-        Resume resume = existCheck(uuid);
-        if (resume == null) {
-            throw new NotExistStorageException(uuid);
-        } else {
-            return resume;
-        }
-    }
-
-    public void delete(String uuid) {
-        Resume resume = existCheck(uuid);
-        if (resume == null) {
-            throw new NotExistStorageException(uuid);
-        } else {
-            storage.remove(resume);
-        }
-    }
-
-    public Resume[] getAll() {
-        return storage.toArray(new Resume[0]);
-    }
-
-    public int getSize() {
-        return storage.size();
-    }
-
-    private Resume existCheck(String uuid) {
-        for (Resume rExist : storage) {
-            if (rExist.getUuid().equals(uuid)) {
-                return rExist;
+    @Override
+    protected Integer getSearchKey(String uuid) {
+        for (int i = 0; i < list.size(); i++) {
+            if (list.get(i).getUuid().equals(uuid)) {
+                return i;
             }
         }
         return null;
+    }
+
+    @Override
+    protected boolean isExist(Object searchKey) {
+        return searchKey != null;
+    }
+
+    @Override
+    protected void doUpdate(Resume r, Object searchKey) {
+        list.set((Integer) searchKey, r);
+    }
+
+    @Override
+    protected void doSave(Resume r, Object searchKey) {
+        list.add(r);
+    }
+
+    @Override
+    protected Resume doGet(Object searchKey) {
+        return list.get((Integer) searchKey);
+    }
+
+    @Override
+    protected void doDelete(Object searchKey) {
+        list.remove(((Integer) searchKey).intValue());
+    }
+
+    @Override
+    public void clear() {
+        list.clear();
+    }
+
+    @Override
+    public List<Resume> getAllSorted() {
+        list.sort(Comparator.comparing(Resume::getFullName));
+        return list;
+    }
+
+    @Override
+    public int size() {
+        return list.size();
     }
 }
