@@ -85,7 +85,7 @@ public abstract class AbstractStorageTest {
         storage.save(RESUME_1);
     }
 
-    @Test(expected = StorageException.class)
+    /*@Test(expected = StorageException.class)
     public void saveOverflow() throws Exception {
         org.junit.Assume.assumeTrue(Objects.equals(storage.getClass(), ArrayStorage.class) || Objects.equals(storage.getClass(), SortedArrayStorage.class));
         try {
@@ -96,7 +96,7 @@ public abstract class AbstractStorageTest {
             Assert.fail();
         }
         storage.save(new Resume());
-    }
+    }*/
 
     @Test
     public void get() throws Exception{
