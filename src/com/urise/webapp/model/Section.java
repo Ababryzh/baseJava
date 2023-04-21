@@ -1,7 +1,6 @@
 package com.urise.webapp.model;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.io.Serializable;
 
-public class Section {
+abstract public class Section implements Serializable{
 }
